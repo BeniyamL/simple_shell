@@ -1,0 +1,38 @@
+.TH HSH 1 "2021-03-01" "GNU" "Simple Shell Manual"
+
+.SH NAME
+.B hsh - \fRcustom implementation of a linux and unix like shell
+
+.SH SYNOPSIS
+.B \f COMMAND \fI[ARGUMENTS]
+
+.SH DESCRIPTION
+.B
+\fRhsh executes COMMAND just like a standard shell application found in linux and unix systems. Implemented
+using the c programming language
+
+.SH COMMAND
+.TB
+.B ls \- \fRlist content of a directory. [ARGUMENTS] arguments are just like a normal linux shell
+
+.TB
+.B cd \- \fRchange the current working directory. [ARGUMENTS] arguments are just like a normal linux shell
+
+.TB
+.B mkdir \- \fRcreate a directory. [ARGUMENTS] arguments are just like a normal linux shell
+
+.TB
+.B touch \- \fRlcreate a file. [ARGUMENTS] arguments are just like a normal linux shell
+
+.TB
+.B rm \- \fRremove a file or directory. [ARGUMENTS] arguments are just like a normal linux shell
+
+.TB
+.B which \- \fRfind the binary path of a command. [ARGUMENTS] arguments are just like a normal linux shell
+
+.TB
+.B alias \- \fRcreate a alternative name of a command. [ARGUMENTS] arguments are just like a normal linux shell
+
+.SH AUTHORS
+.TB
+.B \fRWritten and maintained by Bereket Abera \- bereket5042@gmail.com and Beniyam Legesse \- lbeniyam@gmail.com
