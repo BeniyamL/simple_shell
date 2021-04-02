@@ -18,11 +18,15 @@ char *_getline(char *prName)
 		free(line);
 		return (NULL);
 	}
-	printf("%s$", prName);
+	printf("%s$ ", prName);
 	c = getchar();
 
-	while (c != EOF && c != '\n')
+	while (c != '\n')
 	{
+		if (c == EOF)
+		{
+			exit(100);
+		}
 		if (i > strLen - 1)
 		{
 			strLen += 1024;
