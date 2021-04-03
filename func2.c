@@ -15,6 +15,10 @@ char *_which(char *command)
 	size_t pathsIndex = 0, pathIndex = 0, commandIndex = 0, pathLength = 100;
 	struct stat st;
 
+	if (stat(command, &st) == 0)
+	{
+		return (comand);
+	}
 	paths = getenv("PATH");
 	path = malloc(pathLength);
 	if (path == NULL)
