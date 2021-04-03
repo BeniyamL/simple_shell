@@ -7,30 +7,25 @@
  *
  * Return: always sucess
  **/
-int main()
+int main(int __attribute__((__unused__)) ac, char *argv[])
 {
-	size_t size = 0;
 	char *input = NULL;
 	char **tokens = NULL;
-	int len = 0;
 	int status = 1;
 	int characterlen = 0;
 
 	do {
-		write(STDOUT_FILENO, "$:) ", 4);
-		characterlen = getline(&input, &size, stdin);
+		input = _getline(argv[0]);
+		characterlen = _length(input);
 		if (characterlen > 0 && input[0] != '\n')
 		{
-			len = _length(input);
-			tokens = tokenize(input, " \t", len);
-			/**
-			tokens[0] = validate(tokens[0]);
-			**/
+			tokens = tokenize(input, " \t", characterlen);
+			tokens[0] = _which(tokens[0]);
 			if (tokens[0] && access(tokens[0], X_OK) == 0)
 				status = execute(tokens[0], tokens);
 			else
 				perror("./hsh");
-			free_memory_tokens(tokens);
+		/**	free_memory_tokens(tokens);**/
 		}
 	} while (status);
 	free(input);

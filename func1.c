@@ -76,9 +76,9 @@ int _length(char *str)
 {
 	int i = 0;
 
-	while (str[i])
+	while (str[i] != '\0')
 		i++;
-	return (0);
+	return (i);
 }
 /**
  * execute - functin to execute a command
