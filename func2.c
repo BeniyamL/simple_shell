@@ -17,7 +17,7 @@ char *_which(char *command)
 
 	if (stat(command, &st) == 0)
 	{
-		return (comand);
+		return (command);
 	}
 	paths = getenv("PATH");
 	path = malloc(pathLength);
