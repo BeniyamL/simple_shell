@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/stat.h>
 #include "holberton.h"
 
 /**
@@ -12,13 +9,11 @@
 char *_which(char *command)
 {
 	char *paths, *path;
-	size_t pathsIndex = 0, pathIndex = 0, commandIndex = 0, pathLength = 100;
+	size_t psIdx = 0, pIdx = 0, pathLength = 100;
 	struct stat st;
 
 	if (stat(command, &st) == 0)
-	{
 		return (command);
-	}
 	paths = getenv("PATH");
 	path = malloc(pathLength);
 	if (path == NULL)
@@ -28,59 +23,86 @@ char *_which(char *command)
 	}
 	while (1)
 	{
-		if (pathIndex >= pathLength)
+		path = reallocateMemory(&path, &pathLength, pIdx);
+		if (path == NULL)
+			return (NULL);
+		if (paths[psIdx] == ':' || paths[psIdx] == '\0')
 		{
-			pathLength += pathLength;
-			path = realloc(path, pathLength);
+			path[pIdx] = '/';
+			path = appendCommand(path, command, ++pIdx, &pathLength);
+			if (path == NULL)
+				return (NULL);
+			if (stat(path, &st) == 0)
+				return (path);
+			pIdx = 0;
+			if (paths[++psIdx] == '\0')
+				return (NULL);
+		} else
+		{
+			path[pIdx++] = paths[psIdx++];
+		}
+	}
+	return (NULL);
+}
+
+/**
+ * reallocateMemory - realocate path memeory
+ * @path: reallocate path
+ * @pathLength: new length
+ * @pIdx: comparison length
+ *
+ * Return: new reallocated path
+ */
+char *reallocateMemory(char **path, size_t *pathLength, size_t pIdx)
+{
+	if (pIdx >= *pathLength)
+	{
+		*pathLength += *pathLength;
+		*path = realloc(*path, *pathLength);
+		if (path == NULL)
+		{
+			free(*path);
+			return (NULL);
+		}
+	}
+	return (*path);
+}
+
+/**
+ * appendCommand - append a command to path
+ * @path: path to append a command to
+ * @pIdx: current path index
+ * @command: a command to append
+ * @pathLength: current path length
+ *
+ * Return: path with command appended
+ */
+char *appendCommand(char *path, char *command, size_t pIdx, size_t *pathLength)
+{
+	int cmIdx = 0;
+
+	while (command[cmIdx] != '\0')
+	{
+		if ((pIdx + cmIdx) >= *pathLength)
+		{
+			*pathLength += *pathLength;
+			path = realloc(path, *pathLength);
 			if (path == NULL)
 			{
 				free(path);
 				return (NULL);
 			}
 		}
-		if (paths[pathsIndex] == ':' || paths[pathsIndex] == '\0')
-		{
-			path[pathIndex] = '/';
-			pathIndex++;
-			commandIndex = 0;
-			while (command[commandIndex] != '\0')
-			{
-				if ((pathIndex + commandIndex) >= pathLength)
-				{
-					pathLength += pathLength;
-					path = realloc(path, pathLength);
-					if (path == NULL)
-					{
-						free(path);
-						return (NULL);
-					}
-				}
-				path[pathIndex + commandIndex] = command[commandIndex];
-				commandIndex++;
-			}
-			path[pathIndex + commandIndex] = '\0';
-			if (stat(path, &st) == 0)
-			{
-				return (path);
-			}
-			pathIndex = 0;
-			pathsIndex++;
-			if (paths[pathsIndex] == '\0')
-				break;
-			continue;
-		} else
-		{
-			path[pathIndex] = paths[pathsIndex];
-			pathsIndex++;
-			pathIndex++;
-		}
+		path[pIdx + cmIdx] = command[cmIdx];
+		cmIdx++;
 	}
-
-	return (NULL);
+	path[pIdx + cmIdx] = '\0';
+	return (path);
 }
 
 /**
  * _getline - custom get line function
+ * @prName: program name
  *
  * Return: one line string
  */
@@ -90,12 +112,9 @@ char *_getline(char *prName)
 	int c;
 	size_t i = 0, strLen = 1024;
 
-	line = malloc(sizeof(char) * strLen);
+	line = malloc(strLen);
 	if (line == NULL)
-	{
-		free(line);
 		return (NULL);
-	}
 	printf("%s$ ", prName);
 	c = getchar();
 
@@ -104,17 +123,14 @@ char *_getline(char *prName)
 		if (c == EOF)
 		{
 			printf("\n");
-			exit(100);
+			exit(0);
 		}
 		if (i > strLen - 1)
 		{
 			strLen += 1024;
 			line = realloc(line, strLen);
 			if (line == NULL)
-			{
-				free(line);
 				return (NULL);
-			}
 		}
 		line[i] = c;
 		i++;
@@ -122,4 +138,31 @@ char *_getline(char *prName)
 	}
 	line[i] = '\0';
 	return (line);
+}
+
+/**
+ * _strcmp - compares to strings
+ * @s1: the first string
+ * @s2: the second string
+ *
+ * Return: 0 if equal lest than 0 if s2 is greater and
+ * greater 0 if s1 is greater
+ */
+int _strcmp(char *s1, char *s2)
+{
+	int l = 0;
+
+	while (1)
+	{
+		if (s1[l] == '\0' && s2[l] == '\0')
+			return (0);
+		else if (s1[l] == s2[l])
+		{
+			l++;
+			continue;
+		}
+		else
+			return (s1[l] - s2[l]);
+		l++;
+	}
 }

@@ -100,6 +100,7 @@ int execute(char *arg, char **option)
 	}
 	else if (pid == 0)
 	{
+		signal(SIGINT, SIG_DFL);
 		execve(arg, option, environ);
 	}
 	else
@@ -120,13 +121,15 @@ void free_memory_tokens(char **tokens)
 {
 	char **tmp = tokens;
 
-	if (tokens)
+	/** if (tokens)
 	{
 		while(*tokens)
 		{
-			free(*tokens++);
+			printf("%p\n", *tokens);
+			free(tokens++);
 		}
 		free(tmp);
-	}
+	}**/
+	free(tmp);
 
 }
