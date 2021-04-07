@@ -121,15 +121,17 @@ void free_memory_tokens(char **tokens)
 {
 	char **tmp = tokens;
 
-	/** if (tokens)
-	{
-		while(*tokens)
-		{
-			printf("%p\n", *tokens);
-			free(tokens++);
-		}
-		free(tmp);
-	}**/
+	/**
+	*if (tokens)
+	*{
+	*	while(*tokens)
+	*	{
+	*		printf("%p\n", *tokens);
+	*		free(tokens++);
+	*	}
+	*	free(tmp);
+	*}
+	**/
 	free(tmp);
 
 }
