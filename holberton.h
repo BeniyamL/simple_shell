@@ -17,6 +17,9 @@ int _length(char *str);
 char *cleaner(char *input);
 int execute(char *arg, char **option);
 void free_memory_tokens(char **tokens);
+char *_mystrtok(char *str, char *del);
+char *_strcopy(char *dest, char *src);
+
 char *_getline(char *prName);
 char *_which(char *command);
 void customExit(char **tokens, int count, char *prName);

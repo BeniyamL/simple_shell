@@ -17,11 +17,11 @@ char **tokenize(char *input, char *separator, int length)
 	tokens = malloc(sizeof(char) * (length + 1));
 	if (tokens == NULL)
 		return (NULL);
-	token = strtok(input, separator);
+	token = _mystrtok(input, separator);
 	while (token)
 	{
 		tokens[i] = token;
-		token = strtok(NULL, separator);
+		token = _mystrtok(NULL, separator);
 		i++;
 	}
 	tokens[i] = '\0';
