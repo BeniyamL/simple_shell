@@ -67,3 +67,32 @@ char *_strcopy(char *dest, char *src)
 	dest[i] = '\0';
 	return (dest);
 }
+/**
+ * _strdup - function to duplicate a string
+ * @str: the given string
+ *
+ * Return: the duplicated string
+ **/
+char *_strdup(char *str)
+{
+	char *dup;
+	int i = 0;
+	int strlength = 0;
+
+	if (str == NULL)
+		return (NULL);
+	strlength = _length(str);
+	dup = malloc(sizeof(char) * (strlength + 1));
+	if (dup == NULL)
+	{
+		free(dup);
+		return (NULL);
+	}
+	while (str[i])
+	{
+		dup[i] = str[i];
+		i++;
+	}
+	dup[i] = '\0';
+	return (dup);
+}

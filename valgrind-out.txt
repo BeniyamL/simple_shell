@@ -14,7 +14,7 @@
 --24007-- Contents of /proc/version:
 --24007--   Linux version 5.8.0-48-generic (buildd@lgw01-amd64-008) (gcc (Ubuntu 9.3.0-17ubuntu1~20.04) 9.3.0, GNU ld (GNU Binutils for Ubuntu) 2.34) #54~20.04.1-Ubuntu SMP Sat Mar 20 13:40:25 UTC 2021
 --24007-- 
---24007-- Arch and hwcaps: AMD64, LittleEndian, amd64-cx16-lzcnt-rdtscp-sse3-ssse3-avx-avx2-bmi-f16c-rdrand
+e-24007-- Arch and hwcaps: AMD64, LittleEndian, amd64-cx16-lzcnt-rdtscp-sse3-ssse3-avx-avx2-bmi-f16c-rdrand
 --24007-- Page sizes: currently 4096, max supported 4096
 --24007-- Valgrind library directory: /usr/lib/x86_64-linux-gnu/valgrind
 --24007-- Reading syms from /home/bek/Projects/C/simple_shell/hsh

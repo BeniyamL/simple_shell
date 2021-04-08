@@ -18,14 +18,14 @@ void customExit(char **tokens, int count, char *prName)
 	if (count == 1)
 	{
 		printf("exit\n");
-		free_memory_tokens(tokens);
+		free_memory_tokens(tokens, NULL);
 		exit(0);
 	}
 	isNumeric = checkNumber(tokens[1]);
 	if (isNumeric == 0)
 	{
 		printf("%s: exit: %s: numeric argument required\n", prName, tokens[1]);
-		free_memory_tokens(tokens);
+		free_memory_tokens(tokens, NULL);
 		exit(0);
 	}
 	value = getNumericValue(tokens[1], _length(tokens[1]));
@@ -35,7 +35,7 @@ void customExit(char **tokens, int count, char *prName)
 		return;
 	}
 	printf("exit\n");
-	free_memory_tokens(tokens);
+	free_memory_tokens(tokens, NULL);
 	exit(value);
 }
 
