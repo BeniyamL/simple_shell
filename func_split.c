@@ -17,10 +17,12 @@ char *_mystrtok(char *str, char *del)
 		line = malloc(sizeof(char) * (strlength + 1));
 		_strcopy(line, str);
 	}
-	else if (line != NULL)
-		str = line;
-	else
+	else if (line == NULL)
 		return (NULL);
+	else
+	{
+		str = line;
+	}
 	while (*line)
 	{
 		for (i = 0; i < dellength; i++)
@@ -96,3 +98,56 @@ char *_strdup(char *str)
 	dup[i] = '\0';
 	return (dup);
 }
+/**
+ * _mystrtok2 - function to split a string
+ * @str: the given string
+ * @del: the delimeter
+ *
+ * Return: the splited string
+ **/
+char *_mystrtok2(char *str, char *del)
+{
+        static char *line;
+        int strlength, dellength = _length(del), i, index = 0, flag = 0;
+
+        if (str != NULL)
+        {
+                strlength = _length(str);
+                line = malloc(sizeof(char) * (strlength + 1));
+                _strcopy(line, str);
+        }
+        else if (line == NULL)
+                return (NULL);
+        else
+        {
+                str = line;
+        }
+        while (*line)
+        {
+                for (i = 0; i < dellength; i++)
+                {
+                        if (*line == del[i])
+                        {
+                                if (index == 0)
+                                {
+                                        flag = 1;
+                                        str++;
+                                }
+                                else
+                                {
+                                        line++;
+                                        str[index] = '\0';
+                                        return (str);
+                                }
+                        }
+                }
+                if (flag == 0)
+                        index++;
+                line++;
+                flag = 0;
+        }
+        line = NULL;
+        str[index] = '\0';
+	return (str);
+}
+

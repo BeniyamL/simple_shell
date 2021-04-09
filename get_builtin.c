@@ -5,10 +5,11 @@
  *
  * Return: the function pointer to handle the built in
  **/
-int (*handle_built_in(char *command))(char **tokens)
+int (*handle_built_in(char *command))(char **tokens, char *pname)
 {
 	builtin_type blt[] = {
  		{ "cd", handle_cd },
+		{ "exit", customExit },
 		{ NULL, NULL }
 		};
 	int i = 0;
@@ -28,45 +29,51 @@ int (*handle_built_in(char *command))(char **tokens)
  *
  * Return: 1 on success -1 otherwise
  **/
-int handle_cd(char **tokens)
+int handle_cd(char **tokens, char *prName)
 {
 	char *abslt_path;
+	int st = -1;
 
 	if (countTokens(tokens) == 1 || _strcmp(tokens[1], "~") == 0)
 	{
 		abslt_path = _get_environ("HOME", environ);
-		return (chdir(abslt_path));
+		chdir(abslt_path);
+		st = 1;
 	}
 	else if (_strcmp("..", tokens[1]) == 0)
         {
-		return (chdir(".."));
+		chdir("..");
+		st = 1;
         }
 	else if (_strcmp("-", tokens[1]) == 0)
         {
 		abslt_path = _get_environ("OLDPWD", environ);
 		if(abslt_path != NULL)
 		{
-			return (chdir(abslt_path));
+			chdir(abslt_path);
+			st = 1;
 		}
         }
 	else if (_strcmp(".", tokens[1]) == 0)
         {
 		abslt_path = _get_environ("PWD", environ);
-		return (chdir(abslt_path));
+		chdir(abslt_path);
+		st = 1;
         }
 	else
         {
 		if (access(tokens[1], F_OK) == 0)
 		{
-                	return (chdir(tokens[1]));
+                	chdir(tokens[1]);
+			st = 1;
 		}
 		else
 		{
-			perror("cd failed");
-			return (-1);
+			printf("%s: cd failed", prName);
+			st = -1;
 		}
         }
-	return (-1);
+	return st;
 }
 /**
  * _get_environ - find the path of the given command
@@ -96,6 +103,7 @@ char *_get_environ(char *n, char **env)
 			str_env[j] = env[i][j];
 			j++;
 		}
+		str_env[j] = '\0';
 		if (_strcmp(n, str_env) == 0)
 		{
 			free(path);

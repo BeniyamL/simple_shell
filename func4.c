@@ -8,17 +8,19 @@
  *
  * Return: nothing
  */
-void customExit(char **tokens, int count, char *prName)
+int customExit(char **tokens, char *prName)
 {
-	int isNumeric = 0, value;
+	int isNumeric = 0, count = countTokens(tokens), value;
+	int st = -1;
 
-	if (_strcmp(tokens[0], "exit") != 0)
+	/**if (_strcmp(tokens[0], "exit") != 0)
 		return;
-
+	**/
 	if (count == 1)
 	{
 		printf("exit\n");
 		free_memory_tokens(tokens, NULL);
+		st = 1;
 		exit(0);
 	}
 	isNumeric = checkNumber(tokens[1]);
@@ -26,17 +28,19 @@ void customExit(char **tokens, int count, char *prName)
 	{
 		printf("%s: exit: %s: numeric argument required\n", prName, tokens[1]);
 		free_memory_tokens(tokens, NULL);
+		st = 1;
 		exit(0);
 	}
 	value = getNumericValue(tokens[1], _length(tokens[1]));
 	if (count > 2)
 	{
 		printf("%s: exit: too many arguments\n", prName);
-		return;
+		return (-1);
 	}
 	printf("exit\n");
 	free_memory_tokens(tokens, NULL);
 	exit(value);
+	return (st);
 }
 
 /**
