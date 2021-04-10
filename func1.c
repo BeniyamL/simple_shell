@@ -15,7 +15,7 @@ char **tokenize(char *input, char *separator, int length)
 	int i = 0;
 
 	input = cleaner(input);
-	tokens = malloc(sizeof(char) * (length + 1));
+	tokens = malloc(sizeof(char *) * (length + 1));
 	if (tokens == NULL)
 		return (NULL);
 	tmp = _strdup(input);
