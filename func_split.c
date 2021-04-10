@@ -21,13 +21,13 @@ char *_mystrtok(char *str, char *del)
 		return (NULL);
 	else
 	{
-		str = line;
+		str = _strdup(line);
 	}
 	while (*line)
 	{
 		for (i = 0; i < dellength; i++)
 		{
-			if (*line == del[i])
+			if (line[i] == del[i])
 			{
 				if (index == 0)
 				{
@@ -120,13 +120,13 @@ char *_mystrtok2(char *str, char *del)
                 return (NULL);
         else
         {
-                str = line;
+                str = _strdup(line);
         }
         while (*line)
         {
                 for (i = 0; i < dellength; i++)
                 {
-                        if (*line == del[i])
+                        if (line[i] == del[i])
                         {
                                 if (index == 0)
                                 {

@@ -48,12 +48,12 @@ int handle_args(char *str, char **tokens, char *argv)
 		if(_strncmp(tokens[i], "&&", 2) == 0)
 		{
 			tmp = _strdup(str);
-			arg = _mystrtok2(tmp, "&&");
+			arg = strtok(str, "&&");
 			while (arg)
 			{
 				status = call_to_execute(arg, argv);
 				if (status != -1)
-					arg = _mystrtok2(NULL, "&&");
+					arg = strtok(NULL, "&&");
 				else
 					arg = NULL;
 			}
@@ -62,14 +62,14 @@ int handle_args(char *str, char **tokens, char *argv)
 		else if(_strncmp(tokens[i], "||", 2) == 0)
 		{
 			tmp = _strdup(str);
-			arg = _mystrtok2(tmp, "||");
+			arg = strtok(tmp, "||");
 			while (arg)
 			{
 				status = call_to_execute(arg, argv);
 				if (status != -1)
 					arg = NULL;
 				else
-					arg = _mystrtok2(NULL, "||");
+					arg = strtok(NULL, "||");
 			}
 			return (1);
 		}
@@ -106,7 +106,8 @@ int call_to_execute(char *inpt, char *arg)
 
 		else
 		{
-			printf("%s: command not found\n", cmd);
+			perror(cmd);
+			perror(": command not found");
 			free_memory_tokens(tokens, NULL);
 			status = -1;
 		}

@@ -27,7 +27,7 @@ char **tokenize(char *input, char *separator, int length)
 		i++;
 	}
 	tokens[i] = '\0';
-	free(tmp);
+	//free(tmp);
 	return (tokens);
 }
 
