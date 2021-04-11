@@ -7,7 +7,7 @@
  */
 void _signal(void)
 {
-	struct sigaction sa;
+	struct sigaction sa = {0};
 
 	sa.sa_handler = &signalHandler;
 	sa.sa_flags = SA_RESTART;
@@ -27,17 +27,18 @@ void signalHandler(int __attribute__((__unused__)) sigInt)
 /**
  * _setenv - set env value
  * @tokens: tokens values
+ * @pname: program name
  * @count: tokens count
  *
  * Return: key on success NULL on failure
  */
-char *_setenv(char **tokens, int count)
+int _setenv(char **tokens, char __attribute__((__unused__)) *pname, int count)
 {
 	int index = 0;
 	char *key, *newVar;
 
 	if (count < 3)
-		return (NULL);
+		return (-1);
 	newVar = createNewEnvStr(tokens);
 	while (environ[index] != NULL)
 	{
@@ -45,14 +46,14 @@ char *_setenv(char **tokens, int count)
 		if (key != NULL && _strcmp(key, tokens[1]) == 0)
 		{
 			environ[index] = newVar;
-			return (newVar);
+			return (1);
 		}
 		index++;
 	}
 
 	environ[index] = newVar;
 	environ[index + 1] = NULL;
-	return (NULL);
+	return (1);
 }
 
 /**
@@ -78,3 +79,35 @@ char *getKey(char *var)
 
 	return (key);
 }
+
+/**
+ * handleSubaliases - will handle eliases in logical operator commands
+ * @input: command to execute
+ * @arg: argument prname
+ *
+ * Return: int
+ */
+int handleSubaliases(char *input, char *arg)
+{
+	int characterlen = 0, commandLen, commandIndex, status = -1;
+	char **commands = NULL, **tokens = NULL;
+
+	characterlen = _length(input);
+	if (characterlen > 0 && input[0] != '\n')
+	{
+		commands = tokenize(input, ";", characterlen);
+		commandIndex = 0;
+		while (commands[commandIndex] != NULL)
+		{
+			commandLen = _length(commands[commandIndex]);
+			tokens = tokenize(commands[commandIndex], " \t", commandLen);
+			status = handle_args(commands[commandIndex], tokens, arg);
+			if (status == -1)
+			{
+				status = call_to_execute(input, arg);
+			}
+		}
+	}
+	return (status);
+}
+

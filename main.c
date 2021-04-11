@@ -29,27 +29,15 @@ int main(int __attribute__((__unused__)) argc, char *argv[])
 			{
 				commandLen = _length(commands[commandIndex]);
 				tokens = tokenize(commands[commandIndex], " \t", commandLen);
-				if (_strcmp(tokens[0], "exit") == 0)
-					customExit(tokens, countTokens(tokens), argv[0]);
-				else if (_strcmp(tokens[0], "setenv") == 0)
-					_setenv(tokens, countTokens(tokens));
-				else if (_strcmp(tokens[0], "unsetenv") == 0)
-					_unsetenv(tokens, countTokens(tokens));
-				else if (_strcmp(tokens[0], "alias") == 0)
-					_alias(tokens, countTokens(tokens));
-				else if (countTokens(tokens) >= 1 && checkCommandAlias(tokens[0]) != NULL)
+				if (handle_args(commands[commandIndex], tokens, argv[0]) == -1)
 				{
-					alias = 1;
-					input = concatTokens(tokens, checkCommandAlias(tokens[0]));
-					break;
-				}
-				else
-				{
-					tokens[0] = _which(tokens[0]);
-					if (tokens[0] && access(tokens[0], X_OK) == 0)
-						status = execute(tokens[0], tokens);
-					else
-						perror("./hsh");
+					if (countTokens(tokens) >= 1 && checkCommandAlias(tokens[0]) != NULL)
+					{
+						alias = 1;
+						input = concatTokens(tokens, checkCommandAlias(tokens[0]));
+						break;
+					}
+					status = call_to_execute(commands[commandIndex], argv[0]);
 				}
 				commandIndex++;
 			}
@@ -76,7 +64,7 @@ char *checkCommandAlias(char *key)
 	while (_aliases[index] != NULL)
 	{
 		if (_strcmp(_aliases[index]->key, key) == 0)
-			return _aliases[index]->command;
+			return (_aliases[index]->command);
 		index++;
 	}
 
@@ -106,26 +94,149 @@ char *concatTokens(char **tokens, char *newValue)
 	indexTemp = 0;
 	tokenIndex = 1;
 	while (newValue[indexTemp] != '\0')
-        {
+	{
 		newStr[index] = newValue[indexTemp];
-                index++;
-                indexTemp++;
-        }
+		index++;
+		indexTemp++;
+	}
 	newStr[index] = ' ';
 	index++;
-        while (tokens[tokenIndex] != NULL)
-        {
-                indexTemp = 0;
-                while (tokens[tokenIndex][indexTemp] != '\0')
-                {
+	while (tokens[tokenIndex] != NULL)
+	{
+		indexTemp = 0;
+		while (tokens[tokenIndex][indexTemp] != '\0')
+		{
 			newStr[index] = tokens[tokenIndex][indexTemp];
-                        index++;
-                        indexTemp++;
-                }
+			index++;
+			indexTemp++;
+		}
 		newStr[index] = ' ';
 		index++;
-                tokenIndex++;
-        }
+		tokenIndex++;
+	}
 	newStr[index] = '\0';
 	return (newStr);
+}
+/**
+ * handle_args - function to handle logical operators
+ * @str: the input string
+ * @tokens: the input tokens
+ * @argv: the argument values
+ *
+ * Return: 1 on success 0 otherwise
+ **/
+int handle_args(char *str, char **tokens, char *argv)
+{
+	int status = 1;
+	char *arg = NULL;
+	char *tmp = NULL;
+	int i;
+
+	for (i = 0; tokens[i]; i++)
+	{
+		if (_strncmp(tokens[i], "&&", 2) == 0)
+		{
+			tmp = _strdup(str);
+			arg = strtok(str, "&&");
+			while (arg)
+			{
+				status = call_to_execute(arg, argv);
+				if (status != -1)
+					arg = strtok(NULL, "&&");
+				else
+					arg = NULL;
+			}
+			return (1);
+		}
+		else if (_strncmp(tokens[i], "||", 2) == 0)
+		{
+			tmp = _strdup(str);
+			arg = strtok(tmp, "||");
+			while (arg)
+			{
+				status = call_to_execute(arg, argv);
+				if (status != -1)
+					arg = NULL;
+				else
+					arg = strtok(NULL, "||");
+			}
+			return (1);
+		}
+	}
+	return (-1);
+}
+/**
+ * call_to_execute - ready for execution
+ * @inpt: the given input
+ * @arg: the argument values
+ *
+ * Return: 1 on sucess
+ **/
+int call_to_execute(char *inpt, char *arg)
+{
+	char **tokens = NULL;
+	int (*f)(char **, char *, int count);
+	int status = -1;
+	int len = 0;
+	char *cmd = NULL;
+
+	inpt = var_replacement(inpt);
+	len = _length(inpt);
+	tokens = tokenize(inpt, " \t", len);
+	f = handle_built_in(tokens[0]);
+	if (f == NULL)
+	{
+		if (countTokens(tokens) >= 1 && checkCommandAlias(tokens[0]) != NULL)
+		{
+			inpt = concatTokens(tokens, checkCommandAlias(tokens[0]));
+			status = handleSubaliases(inpt, arg);
+			return (status);
+		}
+		cmd = _strdup(tokens[0]);
+		tokens[0] = _which(tokens[0]);
+		if (tokens[0] && access(tokens[0], X_OK) == 0)
+		{
+			status = execute(tokens[0], tokens);
+			free_memory_tokens(tokens, NULL);
+		}
+
+		else
+		{
+			perror(cmd);
+			perror(": command not found");
+			free_memory_tokens(tokens, NULL);
+			status = -1;
+		}
+	}
+	else
+	{
+		status = f(tokens, arg, countTokens(tokens));
+		free_memory_tokens(tokens, NULL);
+	}
+	return (status);
+}
+/**
+ * _strncmp - function that compares n characters
+ * @s1: the first string
+ * @s2: the second string
+ * @n: the number of characters to compare
+ *
+ * Return: 0 if the same, > 0 if s1 >s2 and < 0 if s1 < s2
+ **/
+int _strncmp(char *s1, char *s2, size_t n)
+{
+	size_t i;
+
+	for (i = 0; s1[i] && s2[i] && i < n ; i++)
+	{
+		if (s1[i] > s2[i])
+			return (s1[i] - s2[i]);
+		else if (s1[i] < s2[i])
+			return (s1[i] - s2[i]);
+
+	}
+	if (i == n)
+		return (0);
+	else
+		return (-1);
 }

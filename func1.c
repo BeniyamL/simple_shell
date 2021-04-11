@@ -11,22 +11,23 @@ char **tokenize(char *input, char *separator, int length)
 {
 	char *token;
 	char **tokens;
+	char *tmp = NULL;
 	int i = 0;
 
 	input = cleaner(input);
-	tokens = malloc(sizeof(char) * (length + 1));
+	tokens = malloc(sizeof(char *) * (length + 1));
 	if (tokens == NULL)
 		return (NULL);
-	token = _mystrtok(input, separator);
+	tmp = _strdup(input);
+	token = _mystrtok(tmp, separator);
 	while (token)
 	{
-		tokens[i] = token;
+		tokens[i] = _strdup(token);
 		token = _mystrtok(NULL, separator);
 		i++;
 	}
 	tokens[i] = '\0';
 	return (tokens);
-
 }
 
 /**
@@ -100,7 +101,6 @@ int execute(char *arg, char **option)
 	}
 	else if (pid == 0)
 	{
-		signal(SIGINT, SIG_DFL);
 		execve(arg, option, environ);
 	}
 	else
@@ -114,24 +114,22 @@ int execute(char *arg, char **option)
 /**
  * free_memory_tokens - free the memory assigned for tokens
  * @tokens: the given tokens
+ * @token: single dimensinal token
  *
  * Return: Nothing
  **/
-void free_memory_tokens(char **tokens)
+void free_memory_tokens(char **tokens, char *token)
 {
 	char **tmp = tokens;
 
-	/**
-	*if (tokens)
-	*{
-	*	while(*tokens)
-	*	{
-	*		printf("%p\n", *tokens);
-	*		free(tokens++);
-	*	}
-	*	free(tmp);
-	*}
-	**/
-	free(tmp);
-
+	if (tokens)
+	{
+		while (*tokens)
+		{
+			free(*tokens++);
+		}
+		free(tmp);
+	}
+	if (token)
+		free(token);
 }
