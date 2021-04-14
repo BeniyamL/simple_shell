@@ -15,18 +15,21 @@ char **tokenize(char *input, char *separator, int length)
 	int i = 0;
 
 	input = cleaner(input);
-	tokens = malloc(sizeof(char *) * (length + 1));
-	if (tokens == NULL)
-		return (NULL);
-	tmp = _strdup(input);
-	token = _mystrtok(tmp, separator);
-	while (token)
+	if (input != '\0')
 	{
-		tokens[i] = _strdup(token);
-		token = _mystrtok(NULL, separator);
-		i++;
+		tokens = malloc(sizeof(char *) * (length + 1));
+		if (tokens == NULL)
+			return (NULL);
+		tmp = _strdup(input);
+		token = _mystrtok(tmp, separator);
+		while (token)
+		{
+			tokens[i] = _strdup(token);
+			token = _mystrtok(NULL, separator);
+			i++;
+		}
+		tokens[i] = '\0';
 	}
-	tokens[i] = '\0';
 	return (tokens);
 }
 
@@ -66,21 +69,6 @@ char *cleaner(char *input)
 	input[j + 1] = '\0';
 	return (input);
 }
-
-/**
- * _length - function that finds the length of a string
- * @str: the given string
- *
- * Return: the length of a string
- **/
-int _length(char *str)
-{
-	int i = 0;
-
-	while (str[i] != '\0')
-		i++;
-	return (i);
-}
 /**
  * execute - functin to execute a command
  * @arg: the given command
@@ -96,7 +84,7 @@ int execute(char *arg, char **option)
 	pid = fork();
 	if (pid == -1)
 	{
-		perror("process failed");
+		write(STDERR_FILENO,"process failed\n", 15);
 		return (-1);
 	}
 	else if (pid == 0)
@@ -132,4 +120,53 @@ void free_memory_tokens(char **tokens, char *token)
 	}
 	if (token)
 		free(token);
+}
+/**
+ * call_to_execute - ready for execution
+ * @inpt: the given input
+ * @arg: the argument values
+ *
+ * Return: 1 on sucess
+ **/
+int call_to_execute(char *inpt, char *arg)
+{
+	char **tokens = NULL, *cmd = NULL, *error = NULL;
+	int (*f)(char **, char *, int count);
+	int len = 0;
+	int f_status = 0;
+
+	inpt = var_replacement(inpt, f_status);
+	len = _length(inpt);
+	tokens = tokenize(inpt, " \t", len);
+	f = handle_built_in(tokens[0]);
+	if (f == NULL)
+	{
+		if (countTokens(tokens) >= 1 && checkCommandAlias(tokens[0]) != NULL)
+		{
+			inpt = concatTokens(tokens, checkCommandAlias(tokens[0]));
+			f_status = handleSubaliases(inpt, arg);
+			return (f_status);
+		}
+		cmd = _strdup(tokens[0]);
+		tokens[0] = _which(tokens[0]);
+		if (tokens[0] && access(tokens[0], X_OK) == 0)
+		{
+			f_status = execute(tokens[0], tokens);
+			free_memory_tokens(tokens, NULL);
+ 		}
+		else
+		{
+			error = cmd;
+			_strcat(error, ": command not found\n");
+			write(STDERR_FILENO, error, _length(error));
+			free_memory_tokens(tokens, NULL);
+			f_status = -1;
+		}
+	}
+	else
+	{
+		f_status = f(tokens, arg, countTokens(tokens));
+		free_memory_tokens(tokens, NULL);
+	}
+	return (f_status);
 }

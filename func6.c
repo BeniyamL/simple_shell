@@ -27,7 +27,7 @@ void signalHandler(int __attribute__((__unused__)) sigInt)
 /**
  * _setenv - set env value
  * @tokens: tokens values
- * @pname: program name
+ * @pname: program namels
  * @count: tokens count
  *
  * Return: key on success NULL on failure
@@ -89,8 +89,9 @@ char *getKey(char *var)
  */
 int handleSubaliases(char *input, char *arg)
 {
-	int characterlen = 0, commandLen, commandIndex, status = -1;
+	int characterlen = 0, commandLen, commandIndex;
 	char **commands = NULL, **tokens = NULL;
+	int f_status = 0;
 
 	characterlen = _length(input);
 	if (characterlen > 0 && input[0] != '\n')
@@ -101,13 +102,13 @@ int handleSubaliases(char *input, char *arg)
 		{
 			commandLen = _length(commands[commandIndex]);
 			tokens = tokenize(commands[commandIndex], " \t", commandLen);
-			status = handle_args(commands[commandIndex], tokens, arg);
-			if (status == -1)
+			f_status = handle_args(commands[commandIndex], tokens, arg);
+			if (f_status == -1)
 			{
-				status = call_to_execute(input, arg);
+				f_status = call_to_execute(input, arg);
 			}
 		}
 	}
-	return (status);
+	return (f_status);
 }
 

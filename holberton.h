@@ -9,6 +9,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <signal.h>
+#include <limits.h>
 
 extern char **environ;
 
@@ -55,8 +56,8 @@ char *_get_environ(char *n, char **env);
 int handle_args(char *str, char **tokens, char *argv);
 int call_to_execute(char *input, char *arg);
 int _strncmp(char *s1, char *s2, size_t n);
-char *var_replacement(char *input);
-char *replace_input(char *i, char *ni, char *r_s, int il, int vl);
+char *var_replacement(char *input, int st);
+char *rep_input(char *ipt, char *nw_ipt, char *rplc_str, int iptlen, int vlen);
 char *int_to_str(int n);
 int _intlen(int n);
 char *_getline(char *prName);
@@ -85,5 +86,9 @@ void printAlias(char *key);
 void printAllAliases(void);
 char *checkCommandAlias(char *key);
 char *concatTokens(char **tokens, char *newValue);
-int handleSubaliases(char *input, char *arg);
+int handleSubaliases(char *input, char *argi);
+char *_strcat(char *dest, char *src);
+void setcustomenv(char *name, char *value);
+int cd_to_path(char **tokens, char *prName);
+int handle_semicolon(char *str, char *argv);
 #endif

@@ -30,13 +30,16 @@ int (*handle_built_in(char *command))(char **tokens, char *pname, int count)
  * handle_cd - function to handle cd
  * @tokens: the whole line
  * @prName: project name
+ * @cnt: the number of tokesn
  *
  * Return: 1 on success -1 otherwise
  **/
-int handle_cd(char **tokens, char *prName, int __attribute__((__unused__)) count)
+int handle_cd(char **tokens, char *prName, int __attribute__((__unused__)) cnt)
 {
 	char *abslt_path;
 	int st = -1;
+	char pwd[PATH_MAX];
+	char *pwd_pr;
 
 	if (countTokens(tokens) == 1 || _strcmp(tokens[1], "~") == 0)
 	{
@@ -60,22 +63,40 @@ int handle_cd(char **tokens, char *prName, int __attribute__((__unused__)) count
 	}
 	else if (_strcmp(".", tokens[1]) == 0)
 	{
-		abslt_path = _get_environ("PWD", environ);
-		chdir(abslt_path);
+		getcwd(pwd, sizeof(pwd));
+		pwd_pr = _strdup(pwd);
+		chdir(pwd_pr);
 		st = 1;
 	}
 	else
 	{
-		if (access(tokens[1], F_OK) == 0)
-		{
-			chdir(tokens[1]);
-			st = 1;
-		}
-		else
-		{
-			printf("%s: cd failed", prName);
-			st = -1;
-		}
+		st = cd_to_path(tokens, prName);
+	}
+	return (st);
+}
+/**
+ * cd_to_path - function to navigate to a given path
+ * @tokens: the tokens
+ * @prName: program name
+ *
+ * Return: the status of the execution
+ **/
+int cd_to_path(char **tokens, char *prName)
+{
+	int st = -1;
+	char *err;
+
+	if (access(tokens[1], F_OK) == 0)
+	{
+		chdir(tokens[1]);
+		st = 1;
+	}
+	else
+	{
+		err = prName;
+		_strcat(err, ": cd failed");
+		write(STDERR_FILENO, err, _length(err));
+		st = -1;
 	}
 	return (st);
 }
@@ -122,4 +143,35 @@ char *_get_environ(char *n, char **env)
 	}
 	free(str_env);
 	return (path);
+}
+/**
+ * setcustomenv - to sent the environment variable
+ * @name: the name of the variable
+ * @value: the value of the variable
+ *
+ * Return: nothing
+ **/
+void setcustomenv(char *name, char *value)
+{
+	int i = 0;
+	char *key;
+	char *newval;
+	int len;
+
+	len = _length(name) + _length(value) + 2;
+	newval = malloc(sizeof(char) * len);
+	while (environ[i] != NULL)
+	{
+		key = getKey(environ[i]);
+		if (key != NULL && _strcmp(key, name) == 0)
+		{
+			_strcopy(newval, name);
+			_strcat(newval, "=");
+			_strcat(newval, value);
+			_strcat(newval, "\0");
+			environ[i] = newval;
+		}
+		i++;
+	}
+	free(newval);
 }

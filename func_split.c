@@ -17,10 +17,10 @@ char *_mystrtok(char *str, char *del)
 		line = malloc(sizeof(char) * (strlength + 1));
 		_strcopy(line, str);
 	}
-	else if (line == NULL)
-		return (NULL);
-	else
+	else if (line != NULL && str == NULL)
 		str = _strdup(line);
+	else
+		return (NULL);
 	while (*line)
 	{
 		for (i = 0; i < dellength; i++)
@@ -114,10 +114,10 @@ char *_mystrtok2(char *str, char *del)
 		line = malloc(sizeof(char) * (strlength + 1));
 		_strcopy(line, str);
 	}
-	else if (line == NULL)
-		return (NULL);
-	else
+	else if (line != NULL && str == NULL)
 		str = _strdup(line);
+	else
+		return (NULL);
 	while (*line)
 	{
 		for (i = 0; i < dellength; i++)

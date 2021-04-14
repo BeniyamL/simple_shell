@@ -11,33 +11,44 @@
 int customExit(char **tokens, char *prName, int __attribute__((__unused__)) count)
 {
 	int isNumeric = 0, value;
-	int st = -1;
+	char *msg;
 
 	if (count == 1)
 	{
-		printf("exit\n");
+		//printf("exit\n");
+		write(STDERR_FILENO,"exit\n", 5);
 		free_memory_tokens(tokens, NULL);
-		st = 1;
 		exit(0);
+		return (1);
 	}
 	isNumeric = checkNumber(tokens[1]);
 	if (isNumeric == 0)
 	{
-		printf("%s: exit: %s: numeric argument required\n", prName, tokens[1]);
+		msg = prName;
+		_strcat(msg, ":exit: ");
+		_strcat(msg, tokens[1]);
+		_strcat(msg, ": numeric argument required\n");
+		write(STDERR_FILENO, msg, _length(msg));
+		//printf("%s: exit: %s: numeric argument required\n", prName, tokens[1]);
 		free_memory_tokens(tokens, NULL);
-		st = 1;
 		exit(0);
+		return (1);
 	}
 	value = getNumericValue(tokens[1], _length(tokens[1]));
 	if (count > 2)
 	{
-		printf("%s: exit: too many arguments\n", prName);
+		msg = prName;
+		_strcat(msg, ": exit: too many arguments\n");
+		write(STDERR_FILENO,msg, _length(msg));
+		//printf("%s: exit: too many arguments\n", prName);
 		return (-1);
+		
 	}
-	printf("exit\n");
+	write(STDERR_FILENO,"exit\n", 5);
+	//printf("exit\n");
 	free_memory_tokens(tokens, NULL);
 	exit(value);
-	return (st);
+	return (1);
 }
 
 /**

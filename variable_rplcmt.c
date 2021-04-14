@@ -1,84 +1,85 @@
 #include "holberton.h"
 /**
  * var_replacement - funtion to replace a variable
- * @input: the given input
+ * @in: the given input
  *
  * Return: the replaced variable
  **/
-char *var_replacement(char *input)
+char *var_replacement(char *in, int f_status)
 {
-	char *rplc_str = NULL;
-	int i;
-	int totlen = 0, inptlen = 0, varlen = 0;
-	char *new_input = NULL;
-	char *tmp = NULL;
+	int totlen = 0, i;
+	char *new_input = NULL, *tmp = NULL, *rplc_str = NULL;
 
-	for (i = 0; input[i]; i++)
+	for (i = 0; in[i]; i++)
 	{
-		if (input[i] == '$')
+		if (in[i] == '$')
 		{
-			if (input[i + 1] == '?')
-				;
-			else if (input[i + 1] == '$')
+			if (in[i + 1] == '?')
+			{
+				rplc_str = int_to_str(f_status);
+				break;
+			}
+			else if (in[i + 1] == '$')
 			{
 				rplc_str = int_to_str(getpid());
 				break;
 			}
+			else if (in[i + 1] == '\n' || in[i + 1] == ' ' || in[i + 1] == '\0')
+			{
+				rplc_str = NULL;
+				break;
+			}
 			else
 			{
-				rplc_str = _get_environ(cleaner(input + i + 1), environ);
+				rplc_str = _get_environ(cleaner(in + i + 1), environ);
+				if (rplc_str == NULL)
+					rplc_str = "\n";
 				break;
 			}
 		}
 	}
 	if (rplc_str)
-	{
-		inptlen = i;
-		varlen = _length(rplc_str);
-		totlen = inptlen + varlen;
-	}
+		totlen = i + _length(rplc_str);
 	else
-	{
-		return (input);
-	}
+		return (in);
 	new_input = malloc(sizeof(char) * (totlen + 1));
-	new_input = replace_input(input, new_input, rplc_str, inptlen, varlen);
+	new_input = rep_input(in, new_input, rplc_str, i, _length(rplc_str));
 	tmp = _strdup(new_input);
 	free(new_input);
 	return (tmp);
 }
 /**
- * replace_input - function to replace a string
- * @input: the given string
- * @new_input: the replaces string
+ * rep_input - function to replace a string
+ * @ipt: the given string
+ * @nw_ipt: the replaces string
  * @rplc_str: the length of the new string
- * @inptlen: input len
- * @varlen: variable len
+ * @iptlen: input len
+ * @vlen: variable len
  *
  * Return: the new string
  **/
-char *replace_input(char *input, char *new_input, char *rplc_str, int inptlen, int varlen)
+char *rep_input(char *ipt, char *nw_ipt, char *rplc_str, int iptlen, int vlen)
 {
 	int i = 0, j = 0;
 
-	while (i < inptlen)
+	while (i < iptlen)
 	{
-		if (input[i] != '$')
+		if (ipt[i] != '$')
 		{
-			new_input[i] = input[i];
+			nw_ipt[i] = ipt[i];
 			i++;
 		}
 		else
 			break;
 	}
-	while (j < varlen)
+	while (j < vlen)
 	{
-		new_input[i] = rplc_str[j];
+		nw_ipt[i] = rplc_str[j];
 		j++;
 		i++;
 	}
-	new_input[i] = '\0';
-	return (new_input);
+	nw_ipt[i] = '\0';
+	return (nw_ipt);
 }
 /**
  * int_to_str - convert int to string
