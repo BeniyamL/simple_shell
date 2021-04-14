@@ -23,14 +23,19 @@ int main(int __attribute__((__unused__)) argc, char *argv[])
 		if (characterlen > 0 && input[0] != '\n')
 		{
 			tokens = tokenize(input, " \t", characterlen);
-			f_status = handle_args(input, tokens, argv[0]);
-			if (f_status == -1)
+			if (tokens)
 			{
-				f_status = call_to_execute(input, argv[0]);
+				f_status = handle_args(input, tokens, argv[0]);
+				if (f_status == -1)
+				{
+					f_status = call_to_execute(input, argv[0]);
+				}
 			}
 		}
-		free_memory_tokens(tokens, NULL);
-		free(input);
+		if (tokens)
+			free_memory_tokens(tokens, NULL);
+		if (input)
+			free(input);
 	}
 	return (f_status);
 }

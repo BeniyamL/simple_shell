@@ -9,8 +9,8 @@
  **/
 char **tokenize(char *input, char *separator, int length)
 {
-	char *token;
-	char **tokens;
+	char *token = NULL;
+	char **tokens = NULL;
 	char *tmp = NULL;
 	int i = 0;
 
@@ -118,7 +118,8 @@ void free_memory_tokens(char **tokens, char *token)
 		{
 			free(*tokens++);
 		}
-		free(tmp);
+		if (tmp)
+			free(tmp);
 	}
 	if (token)
 		free(token);
@@ -132,7 +133,7 @@ void free_memory_tokens(char **tokens, char *token)
  **/
 int call_to_execute(char *inpt, char *arg)
 {
-	char **tokens = NULL, *cmd = NULL, *error = NULL, *whichval;
+	char **tokens = NULL, *cmd = NULL, *error1 = NULL, *error2, *whichval = NULL;
 	int (*f)(char **, char *, int count);
 	int len = 0;
 	int f_status = 0;
@@ -151,14 +152,19 @@ int call_to_execute(char *inpt, char *arg)
 		}
 		else
 		{
-			error = cmd;
-			_strcat(error, ": command not found\n");
-			write(STDERR_FILENO, error, _length(error));
+			error1 = _strcat(cmd, ": command not found\n");
+			error2 = _strcat("./hsh: ", error1);
+			write(STDERR_FILENO, error2, _length(error2));
 			f_status = -1;
+			free(error1);
+			free(error2);
 		}
-		free_memory_tokens(tokens, NULL);
-		free(whichval);
-		free(cmd);
+		if (tokens)
+			free_memory_tokens(tokens, NULL);
+		if (whichval)
+			free(whichval);
+		if (cmd)
+			free(cmd);
 	}
 	else
 	{

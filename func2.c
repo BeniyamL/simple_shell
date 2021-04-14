@@ -36,13 +36,15 @@ char *_which(char *command)
 				return (path);
 			pIdx = 0;
 			if (paths[++psIdx] == '\0')
+			{
+				free(path);
 				return (NULL);
+			}
 		} else
 		{
 			path[pIdx++] = paths[psIdx++];
 		}
 	}
-	return (NULL);
 }
 
 /**

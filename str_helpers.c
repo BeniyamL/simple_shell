@@ -9,16 +9,29 @@
 char *_strcat(char *dest, char *src)
 {
 	char *tmpdest;
-	const char *tmpsrc;
+	int len, index = 0, srcindex = 0;
 
-	tmpdest = dest;
-	tmpsrc = src;
-	while (*tmpdest != '\0')
-		tmpdest++;
-	while (*tmpsrc != '\0')
-		*tmpdest++ = *tmpsrc++;
+	len = _length(dest) + _length(src) + 1;
+	tmpdest = malloc(sizeof(char) * len);
+	if (tmpdest == NULL)
+	{
+		free(tmpdest);
+		return (NULL);
+	}
 
-	*tmpdest = '\0';
+	while (dest[index] != '\0')
+	{
+		tmpdest[index] = dest[index];
+		index++;
+	}
+	while (src[srcindex] != '\0')
+	{
+		tmpdest[index] = src[srcindex];
+		index++;
+		srcindex++;
+	}
+
+	tmpdest[index] = '\0';
 	return (tmpdest);
 }
 /**
