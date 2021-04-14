@@ -171,8 +171,7 @@ int call_to_execute(char *inpt, char *arg)
 	{
 		free(inpt);
 		f_status = f(tokens, arg, countTokens(tokens));
-		if (tokens)
-			free_memory_tokens(tokens, NULL);
+		free_memory_tokens(tokens, NULL);
 	}
 	return (f_status);
 }
