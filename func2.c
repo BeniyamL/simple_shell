@@ -110,22 +110,26 @@ char *appendCommand(char *path, char *command, size_t pIdx, size_t *pathLength)
  */
 char *_getline(char *prName)
 {
-	char *line;
+	char *line, *msg;
 	int c;
 	size_t i = 0, strLen = 1024;
 
 	line = malloc(strLen);
 	if (line == NULL)
 		return (NULL);
-	write(STDOUT_FILENO, "./hsh ", _length(prName) + 1);
+
+	msg = _strcat(prName, "$ ");
+	if(isatty(0) == 1)
+		write(STDOUT_FILENO, msg, _length(msg));
 	c = getchar();
 
-	while (c != '\n')
+	while (c != '\n' && c != '\0')
 	{
 		if (c == EOF)
 		{
 			write(STDOUT_FILENO, "\n", 1);
 			free(line);
+			free(msg);
 			exit(0);
 		}
 		if (i > strLen - 1)
@@ -140,6 +144,7 @@ char *_getline(char *prName)
 		c = getchar();
 	}
 	line[i] = '\0';
+	free(msg);
 	return (line);
 }
 
