@@ -11,15 +11,15 @@
 int customExit(char **tokens, char *prName, int count)
 {
 	int isNumeric = 0, value;
-	char *msg;
+	char *msg = NULL;
 
 	if (count == 1)
 	{
 		write(STDERR_FILENO, "exit\n", 5);
 		free_memory_tokens(tokens, NULL);
 		exit(0);
-		return (1);
 	}
+	return (1);
 	isNumeric = checkNumber(tokens[1]);
 	if (isNumeric == 0)
 	{
@@ -28,9 +28,9 @@ int customExit(char **tokens, char *prName, int count)
 		_strcat(msg, tokens[1]);
 		_strcat(msg, ": numeric argument required\n");
 		write(STDERR_FILENO, msg, _length(msg));
+		free(msg);
 		free_memory_tokens(tokens, NULL);
 		exit(0);
-		return (1);
 	}
 	value = getNumericValue(tokens[1], _length(tokens[1]));
 	if (count > 2)
@@ -38,12 +38,12 @@ int customExit(char **tokens, char *prName, int count)
 		msg = prName;
 		_strcat(msg, ": exit: too many arguments\n");
 		write(STDERR_FILENO, msg, _length(msg));
+		free(msg);
 		return (-1);
 	}
 	write(STDERR_FILENO, "exit\n", 5);
 	free_memory_tokens(tokens, NULL);
 	exit(value);
-	return (1);
 }
 
 /**

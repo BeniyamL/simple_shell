@@ -160,9 +160,8 @@ int call_to_execute(char *inpt, char *arg)
 			free(error2);
 			free(error3);
 		}
-		if (whichval)
-			if (_strcmp(whichval, tokens[0]) != 0)
-				free(whichval);
+		if (whichval && _strcmp(whichval, tokens[0]) != 0)
+			free(whichval);
 		if (tokens)
 			free_memory_tokens(tokens, NULL);
 		if (cmd)
@@ -170,8 +169,10 @@ int call_to_execute(char *inpt, char *arg)
 	}
 	else
 	{
+		free(inpt);
 		f_status = f(tokens, arg, countTokens(tokens));
-		free_memory_tokens(tokens, NULL);
+		if (tokens)
+			free_memory_tokens(tokens, NULL);
 	}
 	return (f_status);
 }

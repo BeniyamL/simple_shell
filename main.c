@@ -28,6 +28,8 @@ int main(int __attribute__((__unused__)) argc, char *argv[])
 				f_status = handle_args(input, tokens, argv[0]);
 				if (f_status == -1)
 				{
+					if (_strcmp(tokens[0], "exit") == 0)
+						free_memory_tokens(tokens, NULL);
 					f_status = call_to_execute(input, argv[0]);
 				}
 			}
