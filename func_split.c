@@ -24,7 +24,6 @@ char *_mystrtok(char *str, char *del)
 	while (*line)
 	{
 		for (i = 0; i < dellength; i++)
-		{
 			if (line[i] == del[i])
 			{
 				if (index == 0)
@@ -39,7 +38,6 @@ char *_mystrtok(char *str, char *del)
 					return (str);
 				}
 			}
-		}
 		if (flag == 0)
 			index++;
 		line++;

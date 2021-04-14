@@ -137,8 +137,7 @@ int call_to_execute(char *inpt, char *arg)
 	char **tokens = NULL, *cmd = NULL, *error1 = NULL;
 	char *error2 = NULL, *error3, *whichval = NULL;
 	int (*f)(char **, char *, int count);
-	int len = 0;
-	int f_status = 0;
+	int len = 0, f_status = 0;
 
 	inpt = var_replacement(inpt, f_status);
 	len = _length(inpt);
@@ -149,9 +148,7 @@ int call_to_execute(char *inpt, char *arg)
 		cmd = _strdup(tokens[0]);
 		whichval = _which(tokens[0]);
 		if (whichval && access(whichval, X_OK) == 0)
-		{
 			f_status = execute(whichval, tokens);
-		}
 		else
 		{
 			error1 = _strcat(cmd, ": command not found\n");

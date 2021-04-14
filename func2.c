@@ -119,7 +119,7 @@ char *_getline(char *prName)
 		return (NULL);
 
 	msg = _strcat(prName, "$ ");
-	if(isatty(0) == 1)
+	if (isatty(0) == 1)
 		write(STDOUT_FILENO, msg, _length(msg));
 	c = getchar();
 
