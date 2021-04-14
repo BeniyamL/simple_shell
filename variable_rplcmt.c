@@ -2,7 +2,7 @@
 /**
  * var_replacement - funtion to replace a variable
  * @in: the given input
- *
+ * @f_status: status
  * Return: the replaced variable
  **/
 char *var_replacement(char *in, int f_status)

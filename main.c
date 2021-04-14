@@ -11,17 +11,14 @@ int main(int __attribute__((__unused__)) argc, char *argv[])
 {
 	char *input = NULL;
 	char **tokens = NULL;
-	int characterlen = 0, alias = 0;
+	int characterlen = 0;
 	int f_status = 0;
 
 	_signal();
 	signal(SIGINT, SIG_IGN);
 	while (1)
 	{
-		if (alias == 0)
-			input = _getline(argv[0]);
-		else
-			alias = 0;
+		input = _getline(argv[0]);
 		characterlen = _length(input);
 		if (characterlen > 0 && input[0] != '\n')
 		{
@@ -29,41 +26,12 @@ int main(int __attribute__((__unused__)) argc, char *argv[])
 			f_status = handle_args(input, tokens, argv[0]);
 			if (f_status == -1)
 			{
-				if (countTokens(tokens) >= 1 && checkCommandAlias(tokens[0]) != NULL)
-				{
-					alias = 1;
-					input = concatTokens(tokens, checkCommandAlias(tokens[0]));
-				}
 				f_status = call_to_execute(input, argv[0]);
 			}
 		}
-		if (alias == 0)
-			free(input);
+		free(input);
 	}
 	return (f_status);
-}
-
-/**
- * checkCommandAlias - will check if command exists in aliases
- * @key: command to check
- *
- * Return: the value if exists NULL otherwise
- */
-char *checkCommandAlias(char *key)
-{
-	int index = 0;
-
-	if (_aliases == NULL)
-		return (NULL);
-
-	while (_aliases[index] != NULL)
-	{
-		if (_strcmp(_aliases[index]->key, key) == 0)
-			return (_aliases[index]->command);
-		index++;
-	}
-
-	return (NULL);
 }
 
 /**

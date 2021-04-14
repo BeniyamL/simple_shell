@@ -26,7 +26,7 @@ typedef struct alias_t
 	char *command;
 } alias_t;
 
-alias_t **_aliases;
+/** alias_t **_aliases; **/
 
 char **tokenize(char *input, char *separator, int len);
 int _length(char *str);

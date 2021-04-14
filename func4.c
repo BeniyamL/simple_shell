@@ -8,15 +8,14 @@
  *
  * Return: nothing
  */
-int customExit(char **tokens, char *prName, int __attribute__((__unused__)) count)
+int customExit(char **tokens, char *prName, int count)
 {
 	int isNumeric = 0, value;
 	char *msg;
 
 	if (count == 1)
 	{
-		//printf("exit\n");
-		write(STDERR_FILENO,"exit\n", 5);
+		write(STDERR_FILENO, "exit\n", 5);
 		free_memory_tokens(tokens, NULL);
 		exit(0);
 		return (1);
@@ -29,7 +28,6 @@ int customExit(char **tokens, char *prName, int __attribute__((__unused__)) coun
 		_strcat(msg, tokens[1]);
 		_strcat(msg, ": numeric argument required\n");
 		write(STDERR_FILENO, msg, _length(msg));
-		//printf("%s: exit: %s: numeric argument required\n", prName, tokens[1]);
 		free_memory_tokens(tokens, NULL);
 		exit(0);
 		return (1);
@@ -39,13 +37,10 @@ int customExit(char **tokens, char *prName, int __attribute__((__unused__)) coun
 	{
 		msg = prName;
 		_strcat(msg, ": exit: too many arguments\n");
-		write(STDERR_FILENO,msg, _length(msg));
-		//printf("%s: exit: too many arguments\n", prName);
+		write(STDERR_FILENO, msg, _length(msg));
 		return (-1);
-		
 	}
-	write(STDERR_FILENO,"exit\n", 5);
-	//printf("exit\n");
+	write(STDERR_FILENO, "exit\n", 5);
 	free_memory_tokens(tokens, NULL);
 	exit(value);
 	return (1);

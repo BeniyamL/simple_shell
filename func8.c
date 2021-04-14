@@ -35,16 +35,16 @@ char *createNewEnvStr(char **tokens)
  * _unsetenv - will remove a variable from environ
  * @tokens: a variable to remove
  * @pname: program name
- * @count: the number of tokens
+ * @c: the number of tokens
  *
  * Return: key on success NULL of failure
  */
-int _unsetenv(char **tokens, char __attribute__((__unused__)) *pname, int count)
+int _unsetenv(char **tokens, char __attribute__((__unused__)) *pname, int c)
 {
 	int index = 0, newIndex = 0, removed = 0;
 	char *key;
 
-	if (count != 2)
+	if (c != 2)
 		return (1);
 
 	while (environ[index] != NULL)

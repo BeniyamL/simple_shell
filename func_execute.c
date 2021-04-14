@@ -15,7 +15,7 @@ char **tokenize(char *input, char *separator, int length)
 	int i = 0;
 
 	input = cleaner(input);
-	if (input != '\0')
+	if (input[0] != '\0')
 	{
 		tokens = malloc(sizeof(char *) * (length + 1));
 		if (tokens == NULL)
@@ -84,7 +84,7 @@ int execute(char *arg, char **option)
 	pid = fork();
 	if (pid == -1)
 	{
-		write(STDERR_FILENO,"process failed\n", 15);
+		write(STDERR_FILENO, "process failed\n", 15);
 		return (-1);
 	}
 	else if (pid == 0)
@@ -141,19 +141,13 @@ int call_to_execute(char *inpt, char *arg)
 	f = handle_built_in(tokens[0]);
 	if (f == NULL)
 	{
-		if (countTokens(tokens) >= 1 && checkCommandAlias(tokens[0]) != NULL)
-		{
-			inpt = concatTokens(tokens, checkCommandAlias(tokens[0]));
-			f_status = handleSubaliases(inpt, arg);
-			return (f_status);
-		}
 		cmd = _strdup(tokens[0]);
 		tokens[0] = _which(tokens[0]);
 		if (tokens[0] && access(tokens[0], X_OK) == 0)
 		{
 			f_status = execute(tokens[0], tokens);
 			free_memory_tokens(tokens, NULL);
- 		}
+		}
 		else
 		{
 			error = cmd;

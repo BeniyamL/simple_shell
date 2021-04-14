@@ -4,7 +4,7 @@
 .B hsh - \fRcustom implementation of a linux and unix like shell
 
 .SH SYNOPSIS
-.B \f COMMAND \fI[ARGUMENTS]
+.B \f COMMAND \fR[ARGUMENTS] [COMMAND_SEPARATOR]/[LOGICAL_OPERATOR] \fB[COMMAND] \fR[ARGUEMNTS]...
 
 .SH DESCRIPTION
 .B
@@ -12,26 +12,35 @@
 using the c programming language
 
 .SH COMMAND
-.TB
-.B ls \- \fRlist content of a directory. [ARGUMENTS] arguments are just like a normal linux shell
+.B \fRCommand is any of the linux commands like ls, cd, pwd, which and the like. It also includes built in commands listed below
 
 .TB
 .B cd \- \fRchange the current working directory. [ARGUMENTS] arguments are just like a normal linux shell
+.B \fRSepcial characters ..(parrent directory), ~(home directory), -(previous directory) are treated accordingly.
 
 .TB
-.B mkdir \- \fRcreate a directory. [ARGUMENTS] arguments are just like a normal linux shell
+.B setenv \- \fRwill set env variable. [ARGUMENTS] are a KEY VALUE pair which are separted by space
+.B \fRThe variable stored are temporary variable and will no keep value across different shell executions
 
 .TB
-.B touch \- \fRlcreate a file. [ARGUMENTS] arguments are just like a normal linux shell
+.B unsetenv \- \fRwill remove an env variable. [ARGUMENTS] is the KEY of the variable to remove
 
 .TB
-.B rm \- \fRremove a file or directory. [ARGUMENTS] arguments are just like a normal linux shell
+.B exit \- \fRwill exit the shell. [ARGUMENTS] if an integer argument is passed it will exit with
+.B \fR the value of the argument as a status code for the exit.
 
 .TB
-.B which \- \fRfind the binary path of a command. [ARGUMENTS] arguments are just like a normal linux shell
+.B alias \- \fRcreate an alternative name of a command.
+.B \fR\- [ARGUMENTS] are KEY="VALUE" pair for each alias. executing the alias command without any arguments
+.B \fRwill list all aliases currently available. executing the alias command with only the KEY will display
+.B \fRthe value of the key.
 
-.TB
-.B alias \- \fRcreate a alternative name of a command. [ARGUMENTS] arguments are just like a normal linux shell
+.SH COMMAND_SEPARATOR
+.B ;  \- \fR the simbol semi-colon is used to separte commands each of which will execute independent of each other
+
+.SH LOGICAL_OPERATOR
+.B &&,||  \- \fR the logical operators && and || will execute commands depending of the result of previously
+.B \fR executed command
 
 .SH AUTHORS
 .TB

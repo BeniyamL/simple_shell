@@ -79,36 +79,3 @@ char *getKey(char *var)
 
 	return (key);
 }
-
-/**
- * handleSubaliases - will handle eliases in logical operator commands
- * @input: command to execute
- * @arg: argument prname
- *
- * Return: int
- */
-int handleSubaliases(char *input, char *arg)
-{
-	int characterlen = 0, commandLen, commandIndex;
-	char **commands = NULL, **tokens = NULL;
-	int f_status = 0;
-
-	characterlen = _length(input);
-	if (characterlen > 0 && input[0] != '\n')
-	{
-		commands = tokenize(input, ";", characterlen);
-		commandIndex = 0;
-		while (commands[commandIndex] != NULL)
-		{
-			commandLen = _length(commands[commandIndex]);
-			tokens = tokenize(commands[commandIndex], " \t", commandLen);
-			f_status = handle_args(commands[commandIndex], tokens, arg);
-			if (f_status == -1)
-			{
-				f_status = call_to_execute(input, arg);
-			}
-		}
-	}
-	return (f_status);
-}
-
