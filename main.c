@@ -29,6 +29,7 @@ int main(int __attribute__((__unused__)) argc, char *argv[])
 				f_status = call_to_execute(input, argv[0]);
 			}
 		}
+		free_memory_tokens(tokens, NULL);
 		free(input);
 	}
 	return (f_status);
@@ -98,12 +99,12 @@ int handle_args(char *str, char **tokens, char *argv)
 		if (_strncmp(tokens[i], "&&", 2) == 0)
 		{
 			tmp = _strdup(str);
-			arg = _mystrtok2(tmp, "&&");
+			arg = strtok(tmp, "&&");
 			while (arg)
 			{
 				f_status = call_to_execute(arg, argv);
 				if (f_status != -1)
-					arg = _mystrtok2(NULL, "&&");
+					arg = strtok(NULL, "&&");
 				else
 					arg = NULL;
 			}
@@ -112,14 +113,14 @@ int handle_args(char *str, char **tokens, char *argv)
 		else if (_strncmp(tokens[i], "||", 2) == 0)
 		{
 			tmp = _strdup(str);
-			arg = _mystrtok2(tmp, "||");
+			arg = strtok(tmp, "||");
 			while (arg)
 			{
 				f_status = call_to_execute(arg, argv);
 				if (f_status != -1)
 					arg = NULL;
 				else
-					arg = _mystrtok2(NULL, "||");
+					arg = strtok(NULL, "||");
 			}
 			return (1);
 		}
@@ -144,11 +145,11 @@ int handle_semicolon(char *str, char *argv)
 	int f_status = 0;
 
 	tmp = _strdup(str);
-	arg = _mystrtok2(tmp, ";");
+	arg = strtok(tmp, ";");
 	while (arg)
 	{
 		f_status = call_to_execute(arg, argv);
-		arg = _mystrtok2(NULL, ";");
+		arg = strtok(NULL, ";");
 	}
 	return (f_status);
 }

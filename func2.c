@@ -123,6 +123,7 @@ char *_getline(char *prName)
 		if (c == EOF)
 		{
 			write(STDOUT_FILENO, "\n", 1);
+			free(line);
 			exit(0);
 		}
 		if (i > strLen - 1)

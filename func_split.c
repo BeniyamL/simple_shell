@@ -47,6 +47,7 @@ char *_mystrtok(char *str, char *del)
 	}
 	line = NULL;
 	str[index] = '\0';
+	free(line);
 	return (str);
 }
 /**

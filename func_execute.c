@@ -21,14 +21,16 @@ char **tokenize(char *input, char *separator, int length)
 		if (tokens == NULL)
 			return (NULL);
 		tmp = _strdup(input);
-		token = _mystrtok(tmp, separator);
+		token = strtok(tmp, separator);
 		while (token)
 		{
 			tokens[i] = _strdup(token);
-			token = _mystrtok(NULL, separator);
+			token = strtok(NULL, separator);
 			i++;
 		}
 		tokens[i] = '\0';
+		free(token);
+		free(tmp);
 	}
 	return (tokens);
 }
@@ -130,7 +132,7 @@ void free_memory_tokens(char **tokens, char *token)
  **/
 int call_to_execute(char *inpt, char *arg)
 {
-	char **tokens = NULL, *cmd = NULL, *error = NULL;
+	char **tokens = NULL, *cmd = NULL, *error = NULL, *whichval;
 	int (*f)(char **, char *, int count);
 	int len = 0;
 	int f_status = 0;
@@ -142,20 +144,21 @@ int call_to_execute(char *inpt, char *arg)
 	if (f == NULL)
 	{
 		cmd = _strdup(tokens[0]);
-		tokens[0] = _which(tokens[0]);
-		if (tokens[0] && access(tokens[0], X_OK) == 0)
+		whichval = _which(tokens[0]);
+		if (whichval && access(whichval, X_OK) == 0)
 		{
-			f_status = execute(tokens[0], tokens);
-			free_memory_tokens(tokens, NULL);
+			f_status = execute(whichval, tokens);
 		}
 		else
 		{
 			error = cmd;
 			_strcat(error, ": command not found\n");
 			write(STDERR_FILENO, error, _length(error));
-			free_memory_tokens(tokens, NULL);
 			f_status = -1;
 		}
+		free_memory_tokens(tokens, NULL);
+		free(whichval);
+		free(cmd);
 	}
 	else
 	{
