@@ -110,41 +110,20 @@ char *appendCommand(char *path, char *command, size_t pIdx, size_t *pathLength)
  */
 char *_getline(char *prName)
 {
-	char *line, *msg;
-	int c;
-	size_t i = 0, strLen = 1024;
-
-	line = malloc(strLen);
-	if (line == NULL)
-		return (NULL);
+	char *line = NULL, *msg = NULL;
+	size_t bufsize = 1024;
 
 	msg = _strcat(prName, "$ ");
 	if (isatty(0) == 1)
 		write(STDOUT_FILENO, msg, _length(msg));
-	c = getchar();
 
-	while (c != '\n' && c != '\0')
-	{
-		if (c == EOF)
-		{
-			if (isatty(0) == 1)
-				write(STDOUT_FILENO, "\n", 1);
-			free(line);
-			free(msg);
-			exit(0);
-		}
-		if (i > strLen - 1)
-		{
-			strLen += 1024;
-			line = realloc(line, strLen);
-			if (line == NULL)
-				return (NULL);
-		}
-		line[i] = c;
-		i++;
-		c = getchar();
+	if (getline(&line, &bufsize, stdin) == -1){
+		if (isatty(0) == 1)
+			write(STDOUT_FILENO, "\n", 1);
+		free(line);
+		free(msg);
+		exit(0);
 	}
-	line[i] = '\0';
 	free(msg);
 	return (line);
 }
