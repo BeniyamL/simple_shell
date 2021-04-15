@@ -14,8 +14,6 @@ int main(int __attribute__((__unused__)) argc, char *argv[])
 	int characterlen = 0;
 	int f_status = 0;
 
-	_signal();
-	signal(SIGINT, SIG_IGN);
 	while (1)
 	{
 		input = _getline(argv[0]);
