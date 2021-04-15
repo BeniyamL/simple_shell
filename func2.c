@@ -127,7 +127,8 @@ char *_getline(char *prName)
 	{
 		if (c == EOF)
 		{
-			write(STDOUT_FILENO, "\n", 1);
+			if (isatty(0) == 1)
+				write(STDOUT_FILENO, "\n", 1);
 			free(line);
 			free(msg);
 			exit(0);
