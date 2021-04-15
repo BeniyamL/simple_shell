@@ -7,7 +7,7 @@
  */
 void _signal(void)
 {
-	struct sigaction sa = {0};
+	struct sigaction sa;
 
 	sa.sa_handler = &signalHandler;
 	sa.sa_flags = SA_RESTART;
