@@ -15,7 +15,8 @@ int customExit(char **tokens, char *prName, int count)
 
 	if (count == 1)
 	{
-		write(STDERR_FILENO, "exit\n", 5);
+		if (isatty(0) == 1)
+			write(STDERR_FILENO, "exit\n", 5);
 		free_memory_tokens(tokens, NULL);
 		exit(0);
 	}
