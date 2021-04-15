@@ -135,7 +135,7 @@ void free_memory_tokens(char **tokens, char *token)
 int call_to_execute(char *inpt, char *arg)
 {
 	char **tokens = NULL, *cmd = NULL, *error1 = NULL;
-	char *error2 = NULL, *error3, *whichval = NULL;
+	char *error2 = NULL, *error3 = NULL, *whichval = NULL;
 	int (*f)(char **, char *, int count);
 	int len = 0, f_status = 0;
 
@@ -151,7 +151,7 @@ int call_to_execute(char *inpt, char *arg)
 			f_status = execute(whichval, tokens);
 		else
 		{
-			error1 = _strcat(cmd, ": command not found\n");
+			error1 = _strcat(cmd, ": No such file or directory\n");
 			error2 = _strcat(arg, ": ");
 			error3 = _strcat(error2, error1);
 			write(STDERR_FILENO, error3, _length(error3));
