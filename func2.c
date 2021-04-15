@@ -15,6 +15,8 @@ char *_which(char *command)
 	if (stat(command, &st) == 0)
 		return (command);
 	paths = getenv("PATH");
+	if (paths == NULL)
+		return (NULL);
 	path = malloc(pathLength);
 	if (path == NULL)
 	{
@@ -117,7 +119,8 @@ char *_getline(char *prName)
 	if (isatty(0) == 1)
 		write(STDOUT_FILENO, msg, _length(msg));
 
-	if (getline(&line, &bufsize, stdin) == -1){
+	if (getline(&line, &bufsize, stdin) == -1)
+	{
 		if (isatty(0) == 1)
 			write(STDOUT_FILENO, "\n", 1);
 		free(line);
