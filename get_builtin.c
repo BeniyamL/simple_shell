@@ -13,6 +13,7 @@ int (*handle_built_in(char *command))(char **tokens, char *pname, int count)
 		{ "exit", customExit },
 		{ "setenv", _setenv },
 		{ "unsetenv", _unsetenv },
+		{ "ls", _ls },
 		{ NULL, NULL }
 	};
 	int i = 0;

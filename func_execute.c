@@ -169,8 +169,12 @@ int call_to_execute(char *inpt, char *arg)
 	}
 	else
 	{
-		free(inpt);
-		f_status = f(tokens, arg, countTokens(tokens));
+		if (inpt)
+			free(inpt);
+		if (_strcmp(tokens[0], "ls") == 0)
+			f_status = f(tokens, arg, countTokens(tokens));
+		else
+			f_status = f(tokens, arg, countTokens(tokens));
 		free_memory_tokens(tokens, NULL);
 	}
 	return (f_status);
