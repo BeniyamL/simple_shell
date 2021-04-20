@@ -17,7 +17,8 @@ int main(int __attribute__((__unused__)) argc, char *argv[])
 	while (1)
 	{
 		input = _getline(argv[0]);
-		characterlen = _length(input);
+		if (input)
+			characterlen = _length(input);
 		if (characterlen > 0 && input[0] != '\n')
 		{
 			tokens = tokenize(input, " \t", characterlen);

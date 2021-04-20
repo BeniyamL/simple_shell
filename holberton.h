@@ -10,6 +10,8 @@
 #include <sys/stat.h>
 #include <signal.h>
 #include <limits.h>
+#include <dirent.h>
+#include <errno.h>
 
 extern char **environ;
 
@@ -73,6 +75,8 @@ char *appendCommand(char *path, char *cm, size_t pIdx, size_t *pL);
 void _signal(void);
 void signalHandler(int sigInt);
 int _setenv(char **tokens, char *pname, int count);
+int _ls(char **tokens, char *pname, int count);
+void _custom_ls(const char *dir, int op_a, int op_l);
 int _unsetenv(char **tokens, char *pname, int count);
 char *getKey(char *var);
 char *createNewEnvStr(char **tokens);

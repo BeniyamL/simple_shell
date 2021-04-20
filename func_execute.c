@@ -14,6 +14,8 @@ char **tokenize(char *input, char *separator, int length)
 	char *tmp = NULL;
 	int i = 0;
 
+	if (input == NULL)
+		return (NULL);
 	input = cleaner(input);
 	if (input[0] != '\0')
 	{
@@ -140,6 +142,8 @@ int call_to_execute(char *inpt, char *arg)
 
 	inpt = var_replacement(inpt, f_status);
 	tokens = tokenize(inpt, " \t", len);
+	if (tokens == NULL)
+		return (f_status);
 	f = handle_built_in(tokens[0]);
 	if (f == NULL)
 	{
@@ -163,15 +167,13 @@ int call_to_execute(char *inpt, char *arg)
 		}
 		if (whichval && _strcmp(whichval, tokens[0]) != 0)
 			free(whichval);
-		if (tokens)
-			free_memory_tokens(tokens, NULL);
 		if (cmd)
 			free(cmd);
 	} else
 	{
 		free(inpt);
 		f_status = f(tokens, arg, countTokens(tokens));
-		free_memory_tokens(tokens, NULL);
 	}
+	free_memory_tokens(tokens, NULL);
 	return (f_status);
 }
