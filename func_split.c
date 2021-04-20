@@ -145,4 +145,17 @@ char *_mystrtok2(char *str, char *del)
 	str[index] = '\0';
 	return (str);
 }
+/**
+ * free_env_path - free environment variable
+ * @p: the given path
+ *
+ * Retrun: nothing
+ */
+void free_env_path(char *p)
+{
+	int i;
 
+	for (i = 4; i >= 0; i--)
+		p--;
+	free(p);
+}

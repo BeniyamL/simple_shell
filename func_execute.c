@@ -136,11 +136,9 @@ int call_to_execute(char *inpt, char *arg)
 {
 	char **tokens = NULL, *cmd = NULL, *error1 = NULL;
 	char *error2 = NULL, *error3 = NULL, *whichval = NULL;
-	int (*f)(char **, char *, int count);
-	int len = 0, f_status = 0;
+	int (*f)(char **, char *, int count), len = _length(inpt), f_status = 0;
 
 	inpt = var_replacement(inpt, f_status);
-	len = _length(inpt);
 	tokens = tokenize(inpt, " \t", len);
 	f = handle_built_in(tokens[0]);
 	if (f == NULL)
@@ -151,7 +149,10 @@ int call_to_execute(char *inpt, char *arg)
 			f_status = execute(whichval, tokens);
 		else
 		{
-			error1 = _strcat(cmd, ": No such file or directory\n");
+			if (cmd[0] == '/')
+				error1 = _strcat(cmd, ": No such file or directory\n");
+			else
+				error1 = _strcat(cmd, ": command not found\n");
 			error2 = _strcat(arg, ": ");
 			error3 = _strcat(error2, error1);
 			write(STDERR_FILENO, error3, _length(error3));
@@ -166,8 +167,7 @@ int call_to_execute(char *inpt, char *arg)
 			free_memory_tokens(tokens, NULL);
 		if (cmd)
 			free(cmd);
-	}
-	else
+	} else
 	{
 		free(inpt);
 		f_status = f(tokens, arg, countTokens(tokens));

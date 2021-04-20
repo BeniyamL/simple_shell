@@ -14,41 +14,40 @@ char *_which(char *command)
 
 	if (stat(command, &st) == 0)
 		return (command);
-	paths = getenv("PATH");
+	paths = _get_environ("PATH", environ);
 	if (paths == NULL)
 		return (NULL);
 	path = malloc(pathLength);
 	if (path == NULL)
 	{
-		free(path);
+		free_env_path(paths);
 		return (NULL);
 	}
-	while (1)
+	while (paths[psIdx])
 	{
 		path = reallocateMemory(&path, &pathLength, pIdx);
 		if (path == NULL)
-			return (NULL);
+			break;
 		if (paths[psIdx] == ':' || paths[psIdx] == '\0')
 		{
 			path[pIdx] = '/';
 			path = appendCommand(path, command, ++pIdx, &pathLength);
 			if (path == NULL)
-				return (NULL);
+				break;
 			if (stat(path, &st) == 0)
-				return (path);
-			pIdx = 0;
-			if (paths[++psIdx] == '\0')
 			{
-				free(path);
-				return (NULL);
+				free_env_path(paths);
+				return (path);
 			}
+			pIdx = 0;
+			psIdx++;
 		} else
-		{
 			path[pIdx++] = paths[psIdx++];
-		}
 	}
+	free(path);
+	free_env_path(paths);
+	return (NULL);
 }
-
 /**
  * reallocateMemory - realocate path memeory
  * @path: reallocate path

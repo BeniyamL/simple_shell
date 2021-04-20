@@ -91,4 +91,5 @@ char *_strcat(char *dest, char *src);
 void setcustomenv(char *name, char *value);
 int cd_to_path(char **tokens, char *prName);
 int handle_semicolon(char *str, char *argv);
+void free_env_path(char *p);
 #endif

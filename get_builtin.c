@@ -130,15 +130,14 @@ char *_get_environ(char *n, char **env)
 		str_env[j] = '\0';
 		if (_strcmp(n, str_env) == 0)
 		{
-			free(path);
 			path = _strdup(env[i]);
 			break;
 		}
 	}
 	if (path)
 	{
-		path = _mystrtok(path, "=");
-		path = _mystrtok(NULL, "=");
+		path = strtok(path, "=");
+		path = strtok(NULL, "=");
 	}
 	free(str_env);
 	return (path);
