@@ -35,7 +35,7 @@ int (*handle_built_in(char *command))(char **tokens, char *pname, int count)
  **/
 int handle_cd(char **tokens, char *prName, int __attribute__((__unused__)) cnt)
 {
-	char *abslt_path;
+	char *abslt_path = NULL;
 	int st = -1;
 	char pwd[PATH_MAX];
 	char *pwd_pr;
@@ -44,6 +44,7 @@ int handle_cd(char **tokens, char *prName, int __attribute__((__unused__)) cnt)
 	{
 		abslt_path = _get_environ("HOME", environ);
 		chdir(abslt_path);
+		free_env_path(abslt_path);
 		st = 1;
 	}
 	else if (_strcmp("..", tokens[1]) == 0)
@@ -54,9 +55,10 @@ int handle_cd(char **tokens, char *prName, int __attribute__((__unused__)) cnt)
 	else if (_strcmp("-", tokens[1]) == 0)
 	{
 		abslt_path = _get_environ("OLDPWD", environ);
-		if (abslt_path != NULL)
+		if (abslt_path)
 		{
 			chdir(abslt_path);
+			free_env_path(abslt_path);
 			st = 1;
 		}
 	}
@@ -96,6 +98,7 @@ int cd_to_path(char **tokens, char *prName)
 		_strcat(err, ": cd failed");
 		write(STDERR_FILENO, err, _length(err));
 		st = -1;
+		free(err);
 	}
 	return (st);
 }

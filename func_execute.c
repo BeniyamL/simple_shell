@@ -170,10 +170,7 @@ int call_to_execute(char *inpt, char *arg)
 		if (cmd)
 			free(cmd);
 	} else
-	{
-		free(inpt);
 		f_status = f(tokens, arg, countTokens(tokens));
-	}
 	free_memory_tokens(tokens, NULL);
 	return (f_status);
 }
