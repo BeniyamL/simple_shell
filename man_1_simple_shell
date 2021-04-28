@@ -5,6 +5,7 @@
 
 .SH SYNOPSIS
 .B \f COMMAND \fR[ARGUMENTS] [COMMAND_SEPARATOR]/[LOGICAL_OPERATOR] \fB[COMMAND] \fR[ARGUEMNTS]...
+.B \fR commands can be run in interactive mode or in a non interactive mode
 
 .SH DESCRIPTION
 .B
@@ -28,6 +29,11 @@ using the c programming language
 .TB
 .B exit \- \fRwill exit the shell. [ARGUMENTS] if an integer argument is passed it will exit with
 .B \fR the value of the argument as a status code for the exit.
+
+.TB
+.B ls \- \fRlist all files in the given directory
+.B \fR\- [ARGUMENTS] are like -a -l which are used to list directory content with more detail and
+.B \fR dirname to specify the directory to list the files for
 
 .TB
 .B alias \- \fRcreate an alternative name of a command.
